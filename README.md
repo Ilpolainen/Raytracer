@@ -27,9 +27,9 @@ ACHIEVED
 ## Iteration three
 
 - Add triangle support
-- Add texture mapping
+- Add textures and simple UV mapping
 - Add lights
 - Refactor
-- GPU support and paraller computing
+- GPU support and parallel computing
 - Separate rendering from file writing
 
