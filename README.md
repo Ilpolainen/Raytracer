@@ -1,6 +1,6 @@
 # Raytracer
 
-This is a learning project with no use case value. It is based on different tutorials for understanding all the aspects of ray-tracing rendering AND c++. Props to Peter Shirley whose lectures I'm using as a starting point. At first some of the code has been hand copied (NOT BLINDLY FFS) from https://www.realtimerendering.com/raytracing/Ray%20Tracing%20in%20a%20Weekend.pdf.
+This is a learning project with no use case value. It is based on different tutorials for understanding all the aspects of ray-tracing rendering AND c++. Props to Peter Shirley whose lectures I'm using as a starting point. At first some of the code will be written following closely his example code in https://www.realtimerendering.com/raytracing/Ray%20Tracing%20in%20a%20Weekend.pdf. Once the understanding of c++ goes further, I will only use the concepts and basic raytracing knowledge achieved. Strong restructuring and modification has already been made in the first commit.
 
 ![](https://github.com/Ilpolainen/Raytracer/blob/master/Project/Images/bubbleBall.png)
 
