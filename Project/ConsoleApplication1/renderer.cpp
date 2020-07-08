@@ -67,21 +67,28 @@ vec3 renderer::color_in_pixel(int i, int j, cam &camera, surf * world, light *l,
 
 vec3 renderer::color(ray &r, surf *world, light *l, int maxbounce) {
 	hitRecord rec;
-	if (world->hit(r, 0.001f, 1000.0f, rec) && maxbounce > 0) {
-		ray scattered;
-		vec3 attenuation;
-		vec3 direct;
-		if (rec.mat->scatter(r, rec, attenuation, scattered, l)) {
-			vec3 indirect = color(scattered, world, l, maxbounce - 1);
-			direct = rec.mat->lighting(l, rec, r);
-			return attenuation.had(indirect);
+	if (maxbounce > 0) {
+		if (world->hit(r, 0.001f, 1000.0f, rec)) {
+			ray scattered;
+			vec3 attenuation;
+			if (rec.mat->scatter(r, rec, attenuation, scattered, l)) {
+				vec3 indirect = color(scattered, world, l, maxbounce - 1);
+				return attenuation.had(indirect);
+			}
+			else {
+				return vec3(0, 0, 0);
+			}
 		}
 		else {
-			return vec3(0, 0, 0);
+			vec3 dir = r.rawDirection().normalized();
+			return sceneCreator::ambience(dir, 1.0f) + l->getColor(dir);
 		}
 	}
 	else {
 		vec3 dir = r.rawDirection().normalized();
+		if (world->hit(r, 0.001f, 1000.0f, rec)) {
+			return sceneCreator::ambience(dir, 1.0f);
+		}		
 		return sceneCreator::ambience(dir, 1.0f) + l->getColor(dir);
 	}
 }
