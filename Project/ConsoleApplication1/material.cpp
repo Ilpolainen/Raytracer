@@ -3,13 +3,6 @@
 #include <cassert>
 
 
-
-
-bool material::scatter(const ray & r, hitRecord & data, vec3 & attenuation, ray & scattered) const
-{
-	return false;
-}
-
 vec3 material::reflect(const vec3 & in, const vec3 & normal)
 {
 	return in - 2 * (in * normal) * normal;
@@ -33,11 +26,3 @@ float material::schlick(float cosine, float ref_idx)
 	return r0 + (1.0f - r0) * pow(1.0f - cosine,5);
 }
 
-material::material()
-{
-}
-
-
-material::~material()
-{
-}

@@ -17,7 +17,7 @@ sphere::~sphere()
 bool sphere::hit(const ray &r,float min, float max, hitRecord &data) const
 {
 	vec3 oc = r.origin()  - orig;
-	const vec3 direction = r.direction();
+	const vec3 direction = r.rawDirection();
 	float a = direction * direction;
 	float b = (oc * direction);
 	float c = (oc * oc) - (rad * rad);

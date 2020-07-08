@@ -150,8 +150,10 @@
   <ItemGroup>
     <ClInclude Include="cam.h" />
     <ClInclude Include="dielectric.h" />
+    <ClInclude Include="directionallight.h" />
     <ClInclude Include="ImHelper.h" />
     <ClInclude Include="lambertian.h" />
+    <ClInclude Include="light.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="metal.h" />
     <ClInclude Include="ray.h" />
@@ -169,8 +171,10 @@
   <ItemGroup>
     <ClCompile Include="cam.cpp" />
     <ClCompile Include="dielectric.cpp" />
+    <ClCompile Include="directionallight.cpp" />
     <ClCompile Include="ImHelper.cpp" />
     <ClCompile Include="lambertian.cpp" />
+    <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="material.cpp" />
     <ClCompile Include="metal.cpp" />

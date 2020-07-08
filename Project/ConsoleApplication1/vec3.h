@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <iostream>
+#include <algorithm>
 
 class vec3
 {
@@ -74,6 +75,13 @@ public:
 			z() * other.x() - other.z() * x(), 
 			x() * other.y() - other.x() * y()
 		); 
+	}
+
+	inline vec3 clamped(float m) const {
+		return vec3(
+			std::min(e[0], m),
+			std::min(e[1], m),
+			std::min(e[2], m));
 	}
 
 	inline friend std::ostream& operator<<(std::ostream &os, const vec3 &t) {

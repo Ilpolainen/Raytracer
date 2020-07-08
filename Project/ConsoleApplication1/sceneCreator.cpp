@@ -19,22 +19,22 @@ sceneCreator::~sceneCreator()
 
 surf * sceneCreator::random_scene(vec3 & look_from, vec3 & look_to)
 {
-	int n = 3;
-	float width = 4.0f;
+	int n = 5;
+	float width = 2.0f;
 	float groundRadius = 1000;
 	int totalnum = 2 * n * 2 * n + 5;
 	surf **list = new surf*[totalnum];
 	int i = 1;
 
-	list[0] = new sphere( vec3(0.0f, -groundRadius, -1.0f), groundRadius, new lambertian(vec3(0.5f, 0.7f, 0.4f)));  // ground
+	list[0] = new sphere( vec3(0.0f, -groundRadius, -1.0f), groundRadius, new lambertian(vec3(0.5f, 0.5f, 0.5f)));  // ground
 
-	list[i++] = new sphere( vec3(4, 1, 0), -1.0f, new dielectric(vec3(1.0f, 1.0f, 1.0f), 1.0f));
+	list[i++] = new sphere( vec3(4, 1, 0), 1.0f, new lambertian(vec3(1.0f, 1.0f, 1.0f)));
 
 	list[i++] = new sphere( vec3(-4, 1, 0), 1.0f, new metal(vec3(0.4f, 0.2f, 0.1f), 0.2f));
 
-	list[i++] = new sphere( vec3(0, 1, 0), 1.0f, new metal(vec3(0.65f, 0.6f, 0.65f), 0.0f));
+	list[i++] = new sphere( vec3(0, 1, 0), 1.0f, new metal(vec3(0.7f, 0.6f, 0.5f), 0.0f));
 
-	list[i++] = new sphere(vec3(0.0f, 0.8f, 2.0f), 0.8f, new dielectric(vec3(1.0f, 1.0f, 1.0f), 1.5f));
+	list[i++] = new sphere(vec3(0.0f, 0.25f, 2.0f), 0.25f, new dielectric(vec3(1.0f, 1.0f, 1.0f), 1.5f));
 
 	for (float a = -n * width; a < n * width; a = a + width)
 	{
@@ -63,8 +63,8 @@ surf * sceneCreator::random_scene(vec3 & look_from, vec3 & look_to)
 	return  new surfcluster(list, i);
 }
 
-vec3 sceneCreator::backGround(const vec3 &dir) {
+vec3 sceneCreator::ambience(const vec3 &dir, float intensity) {
 	float t = 0.5f * (dir.y() + 1);
-	vec3 bgTint = vec3(0.5f, 0.7f, 0.9f);
-	return t * bgTint + (1.0f - t) * vec3(1, 1, 1);
+	vec3 bgTint = vec3(0.5f, 0.7f, 1.0f);
+	return (t * bgTint + (1.0f - t) * vec3(1, 1, 1)) * intensity;
 }

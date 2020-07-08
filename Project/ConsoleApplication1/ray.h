@@ -7,11 +7,12 @@ public:
 	ray();
 	~ray();
 
+	vec3 rawDirection() const;
 	vec3 direction() const;
 	vec3 origin() const;
 	vec3 p(float t) const;
 private:
-	vec3 A;
-	vec3 B;
+	vec3 orig;
+	vec3 rawDir;
 };
 

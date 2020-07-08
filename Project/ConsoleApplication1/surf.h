@@ -16,6 +16,7 @@ struct hitRecord {
 	vec3 p;
 	vec3 normal;
 	material *mat;
+	bool receiveDirectLight = true;
 };
 
 

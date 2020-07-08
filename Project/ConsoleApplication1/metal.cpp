@@ -2,10 +2,11 @@
 #include "metal.h"
 #include "specmath.h"
 #include "material.h"
+#include "light.h"
 
-bool metal::scatter(const ray & r, hitRecord & data, vec3 & attenuation, ray & scattered) const
+bool metal::scatter(const ray & r, hitRecord & data, vec3 & attenuation, ray & scattered, const light *l) const
 {
-	vec3 v = r.direction().normalized();
+	vec3 v = r.rawDirection().normalized();
 	vec3 n = data.normal;
 	vec3 reflected = material::reflect(v, n);
 	if (fuzz > 0) {
@@ -16,7 +17,7 @@ bool metal::scatter(const ray & r, hitRecord & data, vec3 & attenuation, ray & s
 	}
 	
 	attenuation = albedo;
-	return (scattered.direction() * data.normal > 0);
+	return (scattered.rawDirection() * data.normal > 0);
 }
 
 metal::metal(const vec3 a,float f)
@@ -33,4 +34,9 @@ metal::metal(const vec3 a,float f)
 
 metal::~metal()
 {
+}
+
+vec3 metal::lighting(const light * l, const hitRecord & data, const ray & r) const
+{
+	return l->getColor(data.normal);
 }

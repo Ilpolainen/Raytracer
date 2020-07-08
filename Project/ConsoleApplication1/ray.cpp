@@ -2,10 +2,8 @@
 #include "ray.h"
 #include "vec3.h"
 
-ray::ray(const vec3& stp, const vec3& dir)
+ray::ray(const vec3& orig, const vec3& dir) : rawDir(dir), orig(orig)
 {
-	A = stp;
-	B = dir;
 }
 
 ray::ray()
@@ -17,17 +15,22 @@ ray::~ray()
 {
 }
 
+vec3 ray::rawDirection() const
+{
+	return rawDir;
+}
+
 vec3 ray::direction() const
 {
-	return B;
+	return rawDir.normalized();
 }
 
 vec3 ray::origin() const
 {
-	return A;
+	return orig;
 }
 
 vec3 ray::p(float t) const
 {
-	return A + t * B;
+	return orig + t * rawDir;
 }

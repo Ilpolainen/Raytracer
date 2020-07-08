@@ -10,6 +10,7 @@
 #include <cassert>
 #include <functional>
 #include "specmath.h"
+#include "light.h"
 #include "material.h"
 
 
@@ -25,7 +26,7 @@ renderer::~renderer()
 {
 }
 
-void renderer::render(cam &camera, surf * scene, int num_samples, int max_bounces, std::string fname)
+void renderer::render(cam &camera, surf * scene, light *l, int num_samples, int max_bounces, std::string fname)
 {
 	std::ofstream file;
 	file.open(fname, std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
@@ -37,14 +38,15 @@ void renderer::render(cam &camera, surf * scene, int num_samples, int max_bounce
 		std::cout << "" << percent << "% done \n";
 		for (int i = 0; i < width; i++)
 		{
-			vec3 col = color_in_pixel(i, j, camera, scene, num_samples, max_bounces);
+			vec3 col = color_in_pixel(i, j, camera, scene, l, num_samples, max_bounces);
+			col = col.clamped(1.0f);
 			file << int(255.99f * col[0]) << " " << int(255.99f * col[1]) << " " << int(255.99f * col[2]) << "\n";
 		}
 	}
 	file.close();
 }
 
-vec3 renderer::color_in_pixel(int i, int j, cam &camera, surf * world, int num_samples, int max_bounces)
+vec3 renderer::color_in_pixel(int i, int j, cam &camera, surf * world, light *l, int num_samples, int max_bounces)
 {
 	vec3 col;
 	vec3 sum = vec3(0, 0, 0);
@@ -53,7 +55,7 @@ vec3 renderer::color_in_pixel(int i, int j, cam &camera, surf * world, int num_s
 		float u = (i + specmath::randFloat()) * dx;
 		float v = (j + specmath::randFloat()) * dx;
 		ray r = camera.getRay(u, v);
-		vec3 sample = color(r, world, max_bounces);
+		vec3 sample = color(r, world,l, max_bounces);
 		sum = sum + sample;
 	}
 	col = sum / num_samples;
@@ -63,20 +65,23 @@ vec3 renderer::color_in_pixel(int i, int j, cam &camera, surf * world, int num_s
 	return col;
 }
 
-vec3 renderer::color(ray &r, surf *world, int maxbounce) {
+vec3 renderer::color(ray &r, surf *world, light *l, int maxbounce) {
 	hitRecord rec;
 	if (world->hit(r, 0.001f, 1000.0f, rec) && maxbounce > 0) {
 		ray scattered;
 		vec3 attenuation;
-		if (rec.mat->scatter(r, rec, attenuation, scattered)) {
-			return attenuation.had(color(scattered, world, maxbounce - 1));
+		vec3 direct;
+		if (rec.mat->scatter(r, rec, attenuation, scattered, l)) {
+			vec3 indirect = color(scattered, world, l, maxbounce - 1);
+			direct = rec.mat->lighting(l, rec, r);
+			return attenuation.had(indirect);
 		}
 		else {
 			return vec3(0, 0, 0);
 		}
 	}
 	else {
-		vec3 dir = r.direction().normalized();
-		return sceneCreator::backGround(dir);
+		vec3 dir = r.rawDirection().normalized();
+		return sceneCreator::ambience(dir, 1.0f) + l->getColor(dir);
 	}
 }
