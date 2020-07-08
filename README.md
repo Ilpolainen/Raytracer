@@ -8,7 +8,7 @@ Once my understanding of c++ goes further, I will only use the basic raytracing 
 
 ## Long Term Goal
 
-- Make a real time ray-tracer (which means GPU -support) with c++ ( for show-off and learning, applications practical value expected to be nothing. ).
+- Make a ray-tracing based render engine with c++ ( for show-off and learning, applications' practical value expected to be nothing. ).
 
 ## Iteration one
 
