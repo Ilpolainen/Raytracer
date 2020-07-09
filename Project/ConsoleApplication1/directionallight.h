@@ -17,5 +17,9 @@ private:
 	// Inherited via light
 	virtual vec3 getDir(const vec3 & point) const override;
 
+
+	// Inherited via light
+	virtual vec3 getColor() const override;
+
 };
 

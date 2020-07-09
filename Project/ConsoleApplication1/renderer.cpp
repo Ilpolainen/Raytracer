@@ -26,8 +26,10 @@ renderer::~renderer()
 {
 }
 
-void renderer::render(cam &camera, surf * scene, light *l, int num_samples, int max_bounces, std::string fname)
+void renderer::render(cam &camera, surf * scene, light *l, vec3 ambience_col, float ambience_strength, int num_samples, int max_bounces, float bounce_energy, std::string fname)
 {
+	ambience_tint = ambience_col;
+	ambience_amount = ambience_strength;
 	std::ofstream file;
 	file.open(fname, std::ios_base::in | std::ios_base::out | std::ios_base::trunc);
 	file << "P3\n" << width << " " << height << "\n255\n";
@@ -38,7 +40,7 @@ void renderer::render(cam &camera, surf * scene, light *l, int num_samples, int 
 		std::cout << "" << percent << "% done \n";
 		for (int i = 0; i < width; i++)
 		{
-			vec3 col = color_in_pixel(i, j, camera, scene, l, num_samples, max_bounces);
+			vec3 col = color_in_pixel(i, j, camera, scene, l, num_samples, max_bounces, bounce_energy);
 			col = col.clamped(1.0f);
 			file << int(255.99f * col[0]) << " " << int(255.99f * col[1]) << " " << int(255.99f * col[2]) << "\n";
 		}
@@ -46,7 +48,7 @@ void renderer::render(cam &camera, surf * scene, light *l, int num_samples, int 
 	file.close();
 }
 
-vec3 renderer::color_in_pixel(int i, int j, cam &camera, surf * world, light *l, int num_samples, int max_bounces)
+vec3 renderer::color_in_pixel(int i, int j, cam &camera, surf * world, light *l, int num_samples, int max_bounces, float bounce_energy)
 {
 	vec3 col;
 	vec3 sum = vec3(0, 0, 0);
@@ -55,7 +57,7 @@ vec3 renderer::color_in_pixel(int i, int j, cam &camera, surf * world, light *l,
 		float u = (i + specmath::randFloat()) * dx;
 		float v = (j + specmath::randFloat()) * dx;
 		ray r = camera.getRay(u, v);
-		vec3 sample = color(r, world,l, max_bounces);
+		vec3 sample = color(r, world,l, max_bounces, bounce_energy);
 		sum = sum + sample;
 	}
 	col = sum / num_samples;
@@ -65,30 +67,51 @@ vec3 renderer::color_in_pixel(int i, int j, cam &camera, surf * world, light *l,
 	return col;
 }
 
-vec3 renderer::color(ray &r, surf *world, light *l, int maxbounce) {
+vec3 renderer::ambience(const vec3 &dir) {
+	float t = 0.5f * (dir.y() + 1);
+	return ambience_amount * (t * ambience_tint + (1.0f - t) * vec3(1, 1, 1));
+}
+
+
+
+vec3 renderer::color(ray &r, surf *world, light *l, int maxbounce, float bounce_energy) {
+	const vec3 dir = r.rawDirection().normalized();
 	hitRecord rec;
-	if (maxbounce > 0) {
-		if (world->hit(r, 0.001f, 1000.0f, rec)) {
+	if (world->hit(r, 0.001f, 1000.0f, rec)) {
+		if (maxbounce > 0 && bounce_energy > 0.25f) {
 			ray scattered;
 			vec3 attenuation;
 			if (rec.mat->scatter(r, rec, attenuation, scattered, l)) {
-				vec3 indirect = color(scattered, world, l, maxbounce - 1);
-				return attenuation.had(indirect);
+				vec3 indirect = color(scattered, world, l, maxbounce - 1, rec.mat->energyDraw() * bounce_energy);
+				hitRecord temp;
+				vec3 direct;
+				vec3 lightDirection = l->getDir(rec.p);
+				if (!world->hit(ray(rec.p, lightDirection), 0.001f, 1000.0f, temp)) {
+					direct = rec.mat->lighting(l, rec, r);
+				}
+				else {
+					direct = vec3(0, 0, 0);
+				}
+				return attenuation.had(indirect + direct);
 			}
 			else {
 				return vec3(0, 0, 0);
 			}
 		}
 		else {
-			vec3 dir = r.rawDirection().normalized();
-			return sceneCreator::ambience(dir, 1.0f) + l->getColor(dir);
+			hitRecord temp;
+			vec3 direct;
+			vec3 lightDirection = l->getDir(rec.p);
+			if (!world->hit(ray(rec.p, lightDirection), 0.001f, 1000.0f, temp)) {
+				direct = rec.mat->lighting(l, rec, r);
+			}
+			else {
+				direct = vec3(0,0,0);
+			}
+			return ambience(dir) + direct;
 		}
 	}
 	else {
-		vec3 dir = r.rawDirection().normalized();
-		if (world->hit(r, 0.001f, 1000.0f, rec)) {
-			return sceneCreator::ambience(dir, 1.0f);
-		}		
-		return sceneCreator::ambience(dir, 1.0f) + l->getColor(dir);
+		return ambience(dir);
 	}
 }

@@ -21,20 +21,20 @@ surf * sceneCreator::random_scene(vec3 & look_from, vec3 & look_to)
 {
 	int n = 5;
 	float width = 2.0f;
-	float groundRadius = 1000;
+	float groundRadius = 1000.0f;
 	int totalnum = 2 * n * 2 * n + 5;
 	surf **list = new surf*[totalnum];
 	int i = 1;
 
-	list[0] = new sphere( vec3(0.0f, -groundRadius, -1.0f), groundRadius, new lambertian(vec3(0.5f, 0.5f, 0.5f)));  // ground
+	list[0] = new sphere( vec3(0.0f, -groundRadius, -1.0f), groundRadius, new lambertian(vec3(0.5f, 0.5f, 0.5f),0.0f,1.0f,0.3f));  // ground
 
-	list[i++] = new sphere( vec3(4, 1, 0), 1.0f, new lambertian(vec3(1.0f, 1.0f, 1.0f)));
+	list[i++] = new sphere( vec3(4, 1, 0), 1.0f, new lambertian(vec3(0.9f, 0.5f, 1.0f),0.0f,1.0f,0.1f));
 
-	list[i++] = new sphere( vec3(-4, 1, 0), 1.0f, new metal(vec3(0.4f, 0.2f, 0.1f), 0.2f));
+	list[i++] = new sphere( vec3(-4, 1, 0), 1.0f, new metal(vec3(0.4f, 0.2f, 0.1f), 0.2f,0.0f,0.0f,0.3f));
 
-	list[i++] = new sphere( vec3(0, 1, 0), 1.0f, new metal(vec3(0.7f, 0.6f, 0.5f), 0.0f));
+	list[i++] = new sphere( vec3(0, 1, 0), 1.0f, new metal(vec3(0.6f, 0.6f, 0.6f), 0.0f,20.0f,1.5f,0.3f));
 
-	list[i++] = new sphere(vec3(0.0f, 0.25f, 2.0f), 0.25f, new dielectric(vec3(1.0f, 1.0f, 1.0f), 1.5f));
+	list[i++] = new sphere(vec3(2.0f, 0.5f, 2.0f), 0.25f, new dielectric(vec3(1.0f, 1.0f, 1.0f), 1.5f));
 
 	for (float a = -n * width; a < n * width; a = a + width)
 	{
@@ -46,13 +46,18 @@ surf * sceneCreator::random_scene(vec3 & look_from, vec3 & look_to)
 			vec3 center = vec3(a + width * rd.x() * 2.0f, radius, b + width * rd.y());
 
 			if ((center - 0.5f * (look_to + look_from)).length() > 1.0f) {
-				if (choose_mat < 0.5) {
+				if (choose_mat < 0.4) {
 					vec3 color = vec3(specmath::randFloat()*specmath::randFloat(), specmath::randFloat()*specmath::randFloat(), specmath::randFloat()*specmath::randFloat());
-					list[i++] = new sphere(center, radius, new lambertian(color));
+					float shininess = specmath::randFloat() * 32.0f;
+					float specularAmount = specmath::randFloat() * 10.0f;
+					list[i++] = new sphere(center, radius, new lambertian(color,shininess,specularAmount, 0.1f));
 				}
-				else if (choose_mat < 0.8) {
+				else if (choose_mat < 0.7) {
 					vec3 color = vec3(0.5f * (1.0f + specmath::randFloat()), 0.5f * (1.0f + specmath::randFloat()), 0.5f * (1.0f + specmath::randFloat()));
-					list[i++] = new sphere(center, radius, new metal(color, 0.5f * specmath::randFloat()));
+					float shininess = (specmath::randFloat()+2.0f) * 16.0f;
+					float specularAmount = specmath::randFloat() * 0.5f;
+					list[i++] = new sphere(center, radius, new metal(color, 0.5f * specmath::randFloat(),shininess,specularAmount,0.3f));
+
 				}
 				else {
 					list[i++] = new sphere(center, radius, new dielectric(vec3(1, 1, 1), 1.5f));
@@ -61,10 +66,4 @@ surf * sceneCreator::random_scene(vec3 & look_from, vec3 & look_to)
 		}
 	}
 	return  new surfcluster(list, i);
-}
-
-vec3 sceneCreator::ambience(const vec3 &dir, float intensity) {
-	float t = 0.5f * (dir.y() + 1);
-	vec3 bgTint = vec3(0.5f, 0.7f, 1.0f);
-	return (t * bgTint + (1.0f - t) * vec3(1, 1, 1)) * intensity;
 }

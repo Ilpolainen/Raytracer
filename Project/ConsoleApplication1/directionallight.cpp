@@ -23,3 +23,8 @@ vec3 directionallight::getDir(const vec3 & point) const
 	return -direction;
 }
 
+vec3 directionallight::getColor() const
+{
+	return color;
+}
+
