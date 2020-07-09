@@ -4,7 +4,7 @@ This is a learning project with no use case value. It is based on different tuto
 
 Once my understanding of c++ goes further, I will only use the basic raytracing knowledge achieved. Strong restructuring and modification has already been made in the first commit.
 
-![](https://github.com/Ilpolainen/Raytracer/blob/master/Project/Images/qualitySpecular5WithEnergy.jpg)
+![](https://github.com/Ilpolainen/Raytracer/blob/master/Project/Images/qualitySpecular4.jpg)
 
 ## Long Term Goal
 
