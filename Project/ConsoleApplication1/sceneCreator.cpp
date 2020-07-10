@@ -26,13 +26,13 @@ surf * sceneCreator::random_scene(vec3 & look_from, vec3 & look_to)
 	surf **list = new surf*[totalnum];
 	int i = 1;
 
-	list[0] = new sphere( vec3(0.0f, -groundRadius, -1.0f), groundRadius, new lambertian(vec3(0.5f, 0.5f, 0.5f),0.0f,1.0f,0.3f));  // ground
+	list[0] = new sphere( vec3(0.0f, -groundRadius, -1.0f), groundRadius, new lambertian(vec3(0.5f, 0.5f, 0.5f),0.0f,0.0f));  // ground
 
-	list[i++] = new sphere( vec3(4, 1, 0), 1.0f, new lambertian(vec3(0.9f, 0.5f, 1.0f),0.0f,1.0f,0.1f));
+	list[i++] = new sphere( vec3(4, 1, 0), 1.0f, new lambertian(vec3(0.9f, 0.5f, 1.0f),0.0f,0.0f));
 
-	list[i++] = new sphere( vec3(-4, 1, 0), 1.0f, new metal(vec3(0.4f, 0.2f, 0.1f), 0.2f,0.0f,0.0f,0.3f));
+	list[i++] = new sphere( vec3(-4, 1, 0), 1.0f, new metal(vec3(0.4f, 0.2f, 0.1f), 0.2f,0.0f,0.0f));
 
-	list[i++] = new sphere( vec3(0, 1, 0), 1.0f, new metal(vec3(0.6f, 0.6f, 0.6f), 0.0f,20.0f,1.5f,0.3f));
+	list[i++] = new sphere( vec3(0, 1, 0), 1.0f, new metal(vec3(0.6f, 0.6f, 0.6f), 0.0f,20.0f,1.5f));
 
 	list[i++] = new sphere(vec3(2.0f, 0.5f, 2.0f), 0.25f, new dielectric(vec3(1.0f, 1.0f, 1.0f), 1.5f));
 
@@ -50,13 +50,13 @@ surf * sceneCreator::random_scene(vec3 & look_from, vec3 & look_to)
 					vec3 color = vec3(specmath::randFloat()*specmath::randFloat(), specmath::randFloat()*specmath::randFloat(), specmath::randFloat()*specmath::randFloat());
 					float shininess = specmath::randFloat() * 32.0f;
 					float specularAmount = specmath::randFloat() * 10.0f;
-					list[i++] = new sphere(center, radius, new lambertian(color,shininess,specularAmount, 0.1f));
+					list[i++] = new sphere(center, radius, new lambertian(color,shininess,specularAmount));
 				}
 				else if (choose_mat < 0.7) {
 					vec3 color = vec3(0.5f * (1.0f + specmath::randFloat()), 0.5f * (1.0f + specmath::randFloat()), 0.5f * (1.0f + specmath::randFloat()));
 					float shininess = (specmath::randFloat()+2.0f) * 16.0f;
 					float specularAmount = specmath::randFloat() * 0.5f;
-					list[i++] = new sphere(center, radius, new metal(color, 0.5f * specmath::randFloat(),shininess,specularAmount,0.3f));
+					list[i++] = new sphere(center, radius, new metal(color, 0.5f * specmath::randFloat(),shininess,specularAmount));
 
 				}
 				else {

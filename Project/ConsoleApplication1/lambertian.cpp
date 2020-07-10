@@ -13,7 +13,7 @@ bool lambertian::scatter(const ray & r, hitRecord & data, vec3 & attenuation, ra
 	return true;
 }
 
-lambertian::lambertian(const vec3 a, float shininess, float specularRC, float diffuseRC) : albedo(a), shininess(shininess), specularAmount(specularRC), diffuseAmount(diffuseRC)
+lambertian::lambertian(const vec3 a, float shininess, float specularRC) : albedo(a), shininess(shininess), specularAmount(specularRC)
 {
 }
 
@@ -24,15 +24,11 @@ lambertian::~lambertian()
 
 vec3 lambertian::lighting(const light * l, const hitRecord & data, const ray & r) const
 {
-	vec3 lambertian = albedo.had(l->getColor(r.direction()));
-	if (specularAmount < 0.5f) {
-		return lambertian;
-	}
 	vec3 H = (l->getDir(data.p) - r.direction()).normalized();
 	float NdotH = data.normal * H;
 	float spec = pow(std::max(NdotH, 0.0f), shininess);
 	vec3 specular = l->getColor() * spec;
-	return diffuseAmount * lambertian + specular * specularAmount;
+	return specular * specularAmount;
 }
 
 float lambertian::energyDraw()

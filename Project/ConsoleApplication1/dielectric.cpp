@@ -74,20 +74,10 @@ vec3 dielectric::lighting(const light * l, const hitRecord & data, const ray & r
 		reflectprob = 1.0f;
 	}
 	if (specmath::randFloat() < reflectprob) {
-		vec3 lambertian = albedo.had(l->getColor(r.direction()));
-		vec3 H = (l->getDir(data.p) - r.direction()).normalized();
-		float NdotH = -out_normal * H;
-		float spec = pow(std::max(NdotH, 0.0f), 16.0f);
-		vec3 specular = l->getColor() * spec;
-		return specular;
+		return l->getColor(-out_normal);
 	}
 	else {
-		vec3 lambertian = albedo.had(l->getColor(r.direction()));
-		vec3 H = (l->getDir(data.p) - r.direction()).normalized();
-		float NdotH = -out_normal * H;
-		float spec = pow(std::max(NdotH, 0.0f), 16.0f);
-		vec3 specular = l->getColor() * spec;
-		return specular;
+		return l->getColor(-out_normal);
 	}
 }
 

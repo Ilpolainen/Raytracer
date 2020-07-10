@@ -9,7 +9,7 @@ public:
 	vec3 albedo;
 	float fuzz;
 	virtual bool scatter(const ray & r, hitRecord & data, vec3 &attenuation, ray & scattered, const light *l);
-	metal(const vec3 a, float f, float shininess, float specularAmount, float diffuse_amount);
+	metal(const vec3 a, float f, float shininess, float specularAmount);
 	~metal();
 
 	// Inherited via material
@@ -17,7 +17,6 @@ public:
 private:
 	float shininess;
 	float specularAmount;
-	float diffuseAmount;
 	// Inherited via material
 	virtual float energyDraw() override;
 };
