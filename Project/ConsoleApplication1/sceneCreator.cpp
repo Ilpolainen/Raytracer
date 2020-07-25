@@ -17,9 +17,9 @@ sceneCreator::~sceneCreator()
 {
 }
 
-surf * sceneCreator::random_scene(vec3 & look_from, vec3 & look_to)
+surfcluster * sceneCreator::random_scene(vec3 & look_from, vec3 & look_to, const int num)
 {
-	int n = 5;
+	int n = num;
 	float width = 2.0f;
 	float groundRadius = 1000.0f;
 	int totalnum = 2 * n * 2 * n + 5;
@@ -32,9 +32,9 @@ surf * sceneCreator::random_scene(vec3 & look_from, vec3 & look_to)
 
 	list[i++] = new sphere( vec3(-4, 1, 0), 1.0f, new metal(vec3(0.4f, 0.2f, 0.1f), 0.2f,0.0f,0.0f));
 
-	list[i++] = new sphere( vec3(0, 1, 0), 1.0f, new metal(vec3(0.6f, 0.6f, 0.6f), 0.0f,20.0f,1.5f));
+	list[i++] = new sphere( vec3(0, 1, 0), 1.0f, new metal(vec3(0.6f, 0.6f, 0.6f), 0.0f,20.0f,0.0f));
 
-	list[i++] = new sphere(vec3(2.0f, 0.5f, 2.0f), 0.25f, new dielectric(vec3(1.0f, 1.0f, 1.0f), 1.5f));
+	list[i++] = new sphere(vec3(2.0f, 0.5f, 2.0f), 0.25f, new dielectric(vec3(1.0f, 1.0f, 1.0f), 1.5f,0.0f));
 
 	for (float a = -n * width; a < n * width; a = a + width)
 	{
@@ -49,18 +49,20 @@ surf * sceneCreator::random_scene(vec3 & look_from, vec3 & look_to)
 				if (choose_mat < 0.4) {
 					vec3 color = vec3(specmath::randFloat()*specmath::randFloat(), specmath::randFloat()*specmath::randFloat(), specmath::randFloat()*specmath::randFloat());
 					float shininess = specmath::randFloat() * 32.0f;
-					float specularAmount = specmath::randFloat() * 10.0f;
+					float specularAmount = specmath::randFloat() + 0.5f;
 					list[i++] = new sphere(center, radius, new lambertian(color,shininess,specularAmount));
 				}
 				else if (choose_mat < 0.7) {
 					vec3 color = vec3(0.5f * (1.0f + specmath::randFloat()), 0.5f * (1.0f + specmath::randFloat()), 0.5f * (1.0f + specmath::randFloat()));
 					float shininess = (specmath::randFloat()+2.0f) * 16.0f;
 					float specularAmount = specmath::randFloat() * 0.5f;
+					shininess = 0.0f;
+					specularAmount = 0.0f;
 					list[i++] = new sphere(center, radius, new metal(color, 0.5f * specmath::randFloat(),shininess,specularAmount));
 
 				}
 				else {
-					list[i++] = new sphere(center, radius, new dielectric(vec3(1, 1, 1), 1.5f));
+					list[i++] = new sphere(center, radius, new dielectric(vec3(1, 1, 1), 1.5f, 0.0f));
 				}
 			}
 		}

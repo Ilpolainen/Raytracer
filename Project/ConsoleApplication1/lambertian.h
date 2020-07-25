@@ -1,5 +1,5 @@
 #pragma once
-#include "material.h";
+#include "material.h"
 #include "light.h"
 class lambertian : public material
 {

@@ -7,7 +7,7 @@ class dielectric : public material
 {
 public:
 	virtual bool scatter(const ray &r, hitRecord & data, vec3 &attenuation, ray &scattered, const light *l);
-	dielectric(const vec3 &atte, float ri);
+	dielectric(const vec3 &atte, float ri, float directLightAmount);
 	~dielectric();
 	float ref_idx;
 	vec3 albedo;
@@ -19,6 +19,7 @@ public:
 	virtual float energyDraw() override;
 private:
 	bool reflected; // for optimization
+	float directLightAmount;
 };
 
 

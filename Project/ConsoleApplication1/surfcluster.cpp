@@ -40,4 +40,11 @@ surfcluster::surfcluster(surf ** l, int n)
 
 surfcluster::~surfcluster()
 {
+	for (size_t i = 0; i < N; i++)
+	{
+		delete subSurfs[i];
+		subSurfs[i] = nullptr;
+	}
+	delete [] subSurfs;
+	subSurfs = nullptr;
 }

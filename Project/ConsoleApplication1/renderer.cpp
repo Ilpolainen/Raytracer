@@ -84,34 +84,25 @@ vec3 renderer::color(ray &r, surf *world, light *l, int maxbounce, float bounce_
 			if (rec.mat->scatter(r, rec, attenuation, scattered, l)) {
 				vec3 indirect = color(scattered, world, l, maxbounce - 1, rec.mat->energyDraw() * bounce_energy);
 				hitRecord temp;
-				vec3 direct;
+				//vec3 direct;
 				vec3 lightDirection = l->getDir(rec.p);
-				if (!world->hit(ray(rec.p, lightDirection), 0.001f, 1000.0f, temp)) {
+				/*if (!world->hit(ray(rec.p, lightDirection), 0.001f, 1000.0f, temp)) {
 					direct = rec.mat->lighting(l, rec, r);
 				}
 				else {
 					direct = vec3(0, 0, 0);
-				}
-				return attenuation.had(indirect + direct);
+				}*/
+				return attenuation.had(indirect);
 			}
 			else {
 				return vec3(0, 0, 0);
 			}
 		}
 		else {
-			hitRecord temp;
-			vec3 direct;
-			vec3 lightDirection = l->getDir(rec.p);
-			if (!world->hit(ray(rec.p, lightDirection), 0.001f, 1000.0f, temp)) {
-				direct = rec.mat->lighting(l, rec, r);
-			}
-			else {
-				direct = vec3(0,0,0);
-			}
-			return ambience(dir) + direct;
+			return ambience(dir) + l->getLight(r.direction());
 		}
 	}
 	else {
-		return ambience(dir);
+		return ambience(dir) + l->getLight(r.direction());
 	}
 }

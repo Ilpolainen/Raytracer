@@ -26,3 +26,10 @@ float material::schlick(float cosine, float ref_idx)
 	return r0 + (1.0f - r0) * pow(1.0f - cosine,5);
 }
 
+float material::blinnPhong(const vec3 viewerDir, const vec3 lightSourceDir, const vec3 normal, float specCoeff)
+{
+	vec3 halfWay = (viewerDir + lightSourceDir).normalized();
+	float dotPr = halfWay * normal;
+	return pow(std::max(dotPr, 0.0f), specCoeff);
+}
+

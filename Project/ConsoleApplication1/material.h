@@ -1,6 +1,7 @@
 #pragma once
 #include "surf.h"
 #include <math.h>
+#include <algorithm>
 #include "light.h"
 class material
 {
@@ -11,5 +12,6 @@ public:
 	static vec3 reflect(const vec3 &in, const vec3 &normal);
 	static bool refract(const vec3 &in, const vec3 &norm, float ni_over_nt, vec3 &refracted);
 	static float schlick(float cosine, float ref_idx);
+	static float blinnPhong(const vec3 viewerDir, const vec3 lightSourceDir, const vec3 normal, float specCoeff);
 };
 

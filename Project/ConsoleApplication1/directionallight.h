@@ -12,7 +12,7 @@ private:
 	vec3 direction;
 
 	// Inherited via light
-	virtual vec3 getColor(const vec3 & incoming) const override;
+	virtual vec3 getLight(const vec3 & incoming) const override;
 
 	// Inherited via light
 	virtual vec3 getDir(const vec3 & point) const override;
