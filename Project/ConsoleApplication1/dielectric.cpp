@@ -5,7 +5,7 @@
 #include <cassert>
 
 
-bool dielectric::scatter(const ray & r, hitRecord & data, vec3 & attenuation, ray & scattered, const light *l)
+bool dielectric::scatter(const ray & r, hitrecord & data, vec3 & attenuation, ray & scattered, const light *l) const
 {
 	vec3 out_normal;
 	float ni_over_nt;
@@ -47,7 +47,7 @@ dielectric::~dielectric()
 {
 }
 
-vec3 dielectric::lighting(const light * l, const hitRecord & data, const ray & r) const
+vec3 dielectric::lighting(const light * l, const hitrecord & data, const ray & r) const
 {
 	vec3 out_normal;
 	float ni_over_nt;
@@ -79,7 +79,7 @@ vec3 dielectric::lighting(const light * l, const hitRecord & data, const ray & r
 	}
 }
 
-float dielectric::energyDraw()
+float dielectric::energyDraw() const
 {
 	return 1.0f;
 }

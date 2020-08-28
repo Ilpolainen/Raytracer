@@ -3,7 +3,7 @@
 #include "specmath.h"
 #include <cassert>
 
-bool lambertian::scatter(const ray & r, hitRecord & data, vec3 & attenuation, ray & scattered, const light *l)
+bool lambertian::scatter(const ray & r, hitrecord & data, vec3 & attenuation, ray & scattered, const light *l) const
 {
 	scattered = ray(data.p, data.normal + specmath::random_inside_unit_sphere());
 	attenuation = albedo;
@@ -22,14 +22,14 @@ lambertian::~lambertian()
 {
 }
 
-vec3 lambertian::lighting(const light * l, const hitRecord & data, const ray & r) const
+vec3 lambertian::lighting(const light * l, const hitrecord & data, const ray & r) const
 {
 	float spec = blinnPhong(-r.direction(), l->getDir(data.p), data.normal, shininess);
 	vec3 specular = l->getColor() * spec;
 	return specular * specularAmount;
 }
 
-float lambertian::energyDraw()
+float lambertian::energyDraw() const
 {
 	return 0.5f;
 }

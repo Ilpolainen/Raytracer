@@ -151,6 +151,7 @@
     <ClInclude Include="cam.h" />
     <ClInclude Include="dielectric.h" />
     <ClInclude Include="directionallight.h" />
+    <ClInclude Include="hitrecord.h" />
     <ClInclude Include="ImHelper.h" />
     <ClInclude Include="lambertian.h" />
     <ClInclude Include="light.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="metal.h" />
     <ClInclude Include="ray.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="scene.h" />
     <ClInclude Include="sceneCreator.h" />
     <ClInclude Include="specmath.h" />
     <ClInclude Include="sphere.h" />
@@ -172,6 +174,7 @@
     <ClCompile Include="cam.cpp" />
     <ClCompile Include="dielectric.cpp" />
     <ClCompile Include="directionallight.cpp" />
+    <ClCompile Include="hitrecord.cpp" />
     <ClCompile Include="ImHelper.cpp" />
     <ClCompile Include="lambertian.cpp" />
     <ClCompile Include="light.cpp" />
@@ -180,6 +183,7 @@
     <ClCompile Include="metal.cpp" />
     <ClCompile Include="ray.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="scene.cpp" />
     <ClCompile Include="sceneCreator.cpp" />
     <ClCompile Include="specmath.cpp" />
     <ClCompile Include="sphere.cpp" />

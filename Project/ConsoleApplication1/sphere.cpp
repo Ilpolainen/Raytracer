@@ -3,18 +3,16 @@
 #include <cassert>
 
 
-sphere::sphere(vec3 in_o, float in_r, material *in_mat)
-{
-	orig = in_o;
-	rad = in_r;
-	mat = in_mat;
-}
 
-sphere::~sphere()
+sphere::sphere(vec3 in_o, float in_r, int matId) :
+	orig(in_o), 
+	rad(in_r), 
+	matId(matId)
 {
 }
 
-bool sphere::hit(const ray &r,float min, float max, hitRecord &data) const
+
+bool sphere::hit(const ray &r,float min, float max, hitrecord &data) const
 {
 	vec3 oc = r.origin()  - orig;
 	const vec3 direction = r.rawDirection();
@@ -30,7 +28,7 @@ bool sphere::hit(const ray &r,float min, float max, hitRecord &data) const
 			data.t = t;
 			data.p = r.p(t);
 			data.normal = (data.p - orig) / rad;
-			data.mat = mat;
+			data.matId = matId;
 			return true;
 		}
 		t = (-b + sqr) * inva;
@@ -38,7 +36,7 @@ bool sphere::hit(const ray &r,float min, float max, hitRecord &data) const
 			data.t = t;
 			data.p = r.p(t);
 			data.normal = (data.p - orig) / rad;
-			data.mat = mat;
+			data.matId = matId;
 			return true;
 		}
 	}

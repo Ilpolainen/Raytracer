@@ -26,7 +26,7 @@ renderer::~renderer()
 {
 }
 
-void renderer::render(cam &camera, surf * scene, light *l, vec3 ambience_col, float ambience_strength, int num_samples, int max_bounces, float bounce_energy, std::string fname)
+void renderer::render(cam &camera, const scene& scene, const light *l, vec3 ambience_col, float ambience_strength, int num_samples, int max_bounces, float bounce_energy, std::string fname)
 {
 	ambience_tint = ambience_col;
 	ambience_amount = ambience_strength;
@@ -48,7 +48,7 @@ void renderer::render(cam &camera, surf * scene, light *l, vec3 ambience_col, fl
 	file.close();
 }
 
-vec3 renderer::color_in_pixel(int i, int j, cam &camera, surf * world, light *l, int num_samples, int max_bounces, float bounce_energy)
+vec3 renderer::color_in_pixel(int i, int j, cam &camera, const scene& world, const light *l, int num_samples, int max_bounces, float bounce_energy)
 {
 	vec3 col;
 	vec3 sum = vec3(0, 0, 0);
@@ -74,16 +74,16 @@ vec3 renderer::ambience(const vec3 &dir) {
 
 
 
-vec3 renderer::color(ray &r, surf *world, light *l, int maxbounce, float bounce_energy) {
+vec3 renderer::color(ray &r, const scene& world, const light *l, int maxbounce, float bounce_energy) {
 	const vec3 dir = r.rawDirection().normalized();
-	hitRecord rec;
-	if (world->hit(r, 0.001f, 1000.0f, rec)) {
+	hitrecord rec;
+	if (world.cluster->hit(r, 0.001f, 1000.0f, rec)) {
 		if (maxbounce > 0 && bounce_energy > 0.25f) {
 			ray scattered;
 			vec3 attenuation;
-			if (rec.mat->scatter(r, rec, attenuation, scattered, l)) {
-				vec3 indirect = color(scattered, world, l, maxbounce - 1, rec.mat->energyDraw() * bounce_energy);
-				hitRecord temp;
+			if (world.materials[rec.matId].scatter(r, rec, attenuation, scattered, l)) {
+				vec3 indirect = color(scattered, world, l, maxbounce - 1, world.materials[rec.matId].energyDraw() * bounce_energy);
+				hitrecord temp;
 				//vec3 direct;
 				vec3 lightDirection = l->getDir(rec.p);
 				/*if (!world->hit(ray(rec.p, lightDirection), 0.001f, 1000.0f, temp)) {

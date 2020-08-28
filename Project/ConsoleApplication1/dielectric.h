@@ -6,17 +6,18 @@
 class dielectric : public material
 {
 public:
-	virtual bool scatter(const ray &r, hitRecord & data, vec3 &attenuation, ray &scattered, const light *l);
+	virtual bool scatter(const ray &r, hitrecord & data, vec3 &attenuation, ray &scattered, const light *l) const override;
 	dielectric(const vec3 &atte, float ri, float directLightAmount);
 	~dielectric();
+	dielectric() = default;
 	float ref_idx;
 	vec3 albedo;
 
 	// Inherited via material
-	virtual vec3 lighting(const light * light, const hitRecord & data, const ray & r) const override;
+	virtual vec3 lighting(const light * light, const hitrecord & data, const ray & r) const override;
 
 	// Inherited via material
-	virtual float energyDraw() override;
+	virtual float energyDraw() const override;
 private:
 	bool reflected; // for optimization
 	float directLightAmount;

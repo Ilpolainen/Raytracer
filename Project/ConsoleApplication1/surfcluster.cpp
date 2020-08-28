@@ -1,25 +1,51 @@
 #include "stdafx.h"
 #include "surfcluster.h"
+#include "hitrecord.h"
 #include "float.h"
 #include "sphere.h"
 
 
 
-bool surfcluster::hit(const ray &r, float min, float max, hitRecord &data) const
+surfcluster::surfcluster(const surfcluster & other)
 {
-	
+	std::cout << "Yo!";
+}
+
+surfcluster::surfcluster(surfcluster && other) noexcept :
+	subsurfs(std::move(other.subsurfs))
+{
+	std::cout << "\nSurfcluster move constructor called!\n";
+	n = subsurfs.size();
+}
+
+surfcluster & surfcluster::operator=(const surfcluster & other)
+{
+	std::cout << "Yey!";
+	return *this;
+}
+
+surfcluster & surfcluster::operator=(surfcluster && other) noexcept
+{
+	std::cout << "\nSurfcluster move assignment called!\n";
+	subsurfs = std::move(other.subsurfs);
+	n = subsurfs.size();
+	return *this;
+}
+
+bool surfcluster::hit(const ray &r, float min, float max, hitrecord &data) const
+{
 	bool hit_anything = false;
-	hitRecord temp;
+	hitrecord temp;
 	float closest = FLT_MAX;
-	for (int i = 0; i < N; i++)
+	for (int i = 0; i < n; i++)
 	{
-		if (subSurfs[i]->hit(r,min,max, temp)) {
+		if (subsurfs[i]->hit(r,min,max, temp)) {
 			hit_anything = true;
 			if (temp.t < closest) {
 				data.t = temp.t;
 				data.normal = temp.normal;
 				data.p = temp.p;
-				data.mat = temp.mat;
+				data.matId = temp.matId;
 				closest = temp.t;
 			}
 		}
@@ -27,24 +53,14 @@ bool surfcluster::hit(const ray &r, float min, float max, hitRecord &data) const
 	return hit_anything;
 }
 
-surfcluster::surfcluster()
+surfcluster::surfcluster(std::vector<std::unique_ptr<surf>> subsurfs) : subsurfs(std::move(subsurfs))
 {
+	n = this->subsurfs.size();
+	std::cout << "\nSurfcluster basic constructor called! -> subsurfs.size = " << n << ".\n";
 }
 
-surfcluster::surfcluster(surf ** l, int n)
+int surfcluster::size() const
 {
-	N = n;
-	subSurfs = l;
+	return n;
 }
 
-
-surfcluster::~surfcluster()
-{
-	for (size_t i = 0; i < N; i++)
-	{
-		delete subSurfs[i];
-		subSurfs[i] = nullptr;
-	}
-	delete [] subSurfs;
-	subSurfs = nullptr;
-}

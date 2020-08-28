@@ -5,7 +5,7 @@
 #include "light.h"
 #include <cassert>
 
-bool metal::scatter(const ray & r, hitRecord & data, vec3 & attenuation, ray & scattered, const light *l)
+bool metal::scatter(const ray & r, hitrecord & data, vec3 & attenuation, ray & scattered, const light *l) const
 {
 	vec3 v = r.rawDirection().normalized();
 	vec3 n = data.normal;
@@ -37,14 +37,14 @@ metal::~metal()
 {
 }
 
-vec3 metal::lighting(const light * l, const hitRecord & data, const ray & r) const
+vec3 metal::lighting(const light * l, const hitrecord & data, const ray & r) const
 {
 	float spec = blinnPhong(-r.direction(), l->getDir(data.p), data.normal, shininess);
 	vec3 specular = l->getColor() * spec;
 	return specular * specularAmount;
 }
 
-float metal::energyDraw()
+float metal::energyDraw() const
 {
 	return std::max(1.0f - fuzz , 0.7f);
 }
