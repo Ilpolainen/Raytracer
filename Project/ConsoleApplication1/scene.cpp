@@ -3,13 +3,10 @@
 #include <memory>
 
 
-scene::scene(std::unique_ptr<surfcluster> cluster, std::vector<material> materials) :
+scene::scene(std::unique_ptr<surfcluster> cluster, std::vector<std::unique_ptr<material>> materials) :
 cluster(std::move(cluster)),
-materials(materials)
+materials(std::move(materials))
 {
-	std::cout << "\nIn the scene constructor the sizes are:\n";
-	std::cout << "\nMaterials: " << materials.size() << "?\n";
-	std::cout << "\nSurfaces: " << this->cluster->size() << "?\n";
 }
 
 

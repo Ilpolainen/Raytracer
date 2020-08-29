@@ -15,6 +15,7 @@ bool lambertian::scatter(const ray & r, hitrecord & data, vec3 & attenuation, ra
 
 lambertian::lambertian(const vec3 a, float shininess, float specularRC) : albedo(a), shininess(shininess), specularAmount(specularRC)
 {
+	name = "lambertian";
 }
 
 

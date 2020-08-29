@@ -21,27 +21,27 @@ scene sceneCreator::random_scene(vec3 & look_from, vec3 & look_to, const int num
 	float groundRadius = 1000.0f;
 	int totalnum = 2 * n * 2 * n + 5;
 	std::vector<std::unique_ptr<surf>> surfaces;
-	std::vector<material> materials;
+	std::vector<std::unique_ptr<material>> materials;
 	int i = 0;
 	
 	surfaces.push_back(std::make_unique<sphere>( vec3(0.0f, -groundRadius, -1.0f), groundRadius, i));  // ground
-	materials.push_back(lambertian(vec3(0.5f, 0.5f, 0.5f), 0.0f, 0.0f));
+	materials.push_back(std::make_unique<lambertian>(vec3(0.5f, 0.5f, 0.5f), 0.0f, 0.0f));
 	i++;
 
 	surfaces.push_back(std::make_unique<sphere>( vec3(4, 1, 0), 1.0f, i));
-	materials.push_back(lambertian(vec3(0.9f, 0.5f, 1.0f), 0.0f, 0.0f));
+	materials.push_back(std::make_unique<lambertian>(vec3(0.9f, 0.5f, 1.0f), 0.0f, 0.0f));
 	i++;
 
 	surfaces.push_back(std::make_unique<sphere>( vec3(-4, 1, 0), 1.0f, i));
-	materials.push_back(metal(vec3(0.4f, 0.2f, 0.1f), 0.2f, 0.0f, 0.0f));
+	materials.push_back(std::make_unique<metal>(vec3(0.4f, 0.2f, 0.1f), 0.2f, 0.0f, 0.0f));
 	i++;
 
 	surfaces.push_back(std::make_unique<sphere>( vec3(0, 1, 0), 1.0f,i));
-	materials.push_back(metal(vec3(0.6f, 0.6f, 0.6f), 0.0f, 20.0f, 0.0f));
+	materials.push_back(std::make_unique<metal>(vec3(0.6f, 0.6f, 0.6f), 0.0f, 20.0f, 0.0f));
 	i++;
 
 	surfaces.push_back(std::make_unique<sphere>(vec3(2.0f, 0.5f, 2.0f), 0.25f,i));
-	materials.push_back(dielectric(vec3(1.0f, 1.0f, 1.0f), 1.5f, 0.0f));
+	materials.push_back(std::make_unique<dielectric>(vec3(1.0f, 1.0f, 1.0f), 1.5f, 0.0f));
 	i++;
 
 	for (float a = -n * width; a < n * width; a = a + width)
@@ -59,7 +59,7 @@ scene sceneCreator::random_scene(vec3 & look_from, vec3 & look_to, const int num
 					float shininess = specmath::randFloat() * 32.0f;
 					float specularAmount = specmath::randFloat() + 0.5f;
 					surfaces.push_back(std::make_unique<sphere>(center, radius, i));
-					materials.push_back(lambertian(color, shininess, specularAmount));
+					materials.push_back(std::make_unique<lambertian>(color, shininess, specularAmount));
 				}
 				else if (choose_mat < 0.7) {
 					vec3 color = vec3(0.5f * (1.0f + specmath::randFloat()), 0.5f * (1.0f + specmath::randFloat()), 0.5f * (1.0f + specmath::randFloat()));
@@ -68,20 +68,17 @@ scene sceneCreator::random_scene(vec3 & look_from, vec3 & look_to, const int num
 					shininess = 0.0f;
 					specularAmount = 0.0f;
 					surfaces.push_back(std::make_unique<sphere>(center, radius, i));
-					materials.push_back(metal(color, 0.5f * specmath::randFloat(),shininess,specularAmount));
+					materials.push_back(std::make_unique<metal>(color, 0.5f * specmath::randFloat(),shininess,specularAmount));
 				}
 				else {
 					surfaces.push_back(std::make_unique<sphere>(center, radius,i));
-					materials.push_back(dielectric(vec3(1, 1, 1), 1.5f, 0.0f));
+					materials.push_back(std::make_unique<dielectric>(vec3(1, 1, 1), 1.5f, 0.0f));
 				}
 			}
 			i++;
 		}
 	}
-	std::cout << "\nScenecreator creates " << surfaces.size() << " surfaces and " << materials.size() <<" materials.\n";
 	auto cluster = std::make_unique<surfcluster>(std::move(surfaces));
-	std::cout << "\nIn Scenecreator the surfcluster size is " << cluster->size() << " though.\n";
-	
-	auto world = scene(std::move(cluster), materials);
+	auto world = scene(std::move(cluster), std::move(materials));
 	return world;
 }

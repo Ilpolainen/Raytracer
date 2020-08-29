@@ -5,9 +5,9 @@
 class scene
 {
 public:
-	scene(std::unique_ptr<surfcluster> cluster, std::vector<material> materials);
+	scene(std::unique_ptr<surfcluster> cluster, std::vector<std::unique_ptr<material>> materials);
 	scene() = default;
 	std::unique_ptr<surfcluster> cluster;
-	std::vector<material> materials;
+	std::vector<std::unique_ptr<material>> materials;
 };
 

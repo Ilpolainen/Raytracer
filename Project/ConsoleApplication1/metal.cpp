@@ -7,6 +7,7 @@
 
 bool metal::scatter(const ray & r, hitrecord & data, vec3 & attenuation, ray & scattered, const light *l) const
 {
+
 	vec3 v = r.rawDirection().normalized();
 	vec3 n = data.normal;
 	vec3 reflected = material::reflect(v, n);
@@ -23,6 +24,7 @@ bool metal::scatter(const ray & r, hitrecord & data, vec3 & attenuation, ray & s
 
 metal::metal(const vec3 a,float f, float shininess, float specularAmount) : shininess(shininess), specularAmount(specularAmount)
 {
+	name = "metal";
 	albedo = a;
 	if (f < 0) {
 		f = 0;

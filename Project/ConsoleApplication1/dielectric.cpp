@@ -41,6 +41,7 @@ bool dielectric::scatter(const ray & r, hitrecord & data, vec3 & attenuation, ra
 
 dielectric::dielectric(const vec3 &att, float ri, float directLightAmount) : ref_idx(ri), albedo(att), directLightAmount(directLightAmount)
 {
+	name = "dielectric";
 }
 
 dielectric::~dielectric()
@@ -72,10 +73,12 @@ vec3 dielectric::lighting(const light * l, const hitrecord & data, const ray & r
 		reflectprob = 1.0f;
 	}
 	if (specmath::randFloat() < reflectprob) {
-		return directLightAmount * l->getLight(-out_normal);
+		return vec3(0, 0, 0);
+		//return directLightAmount * l->getLight(-out_normal);
 	}
 	else {
 		return directLightAmount * l->getLight(-out_normal);
+		//return vec3(0, 0, 0);
 	}
 }
 

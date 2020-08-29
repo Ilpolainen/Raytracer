@@ -12,6 +12,7 @@
 #include "specmath.h"
 #include "light.h"
 #include "material.h"
+#include "metal.h"
 
 
 renderer::renderer(int w, int h)
@@ -78,16 +79,17 @@ vec3 renderer::color(ray &r, const scene& world, const light *l, int maxbounce, 
 	const vec3 dir = r.rawDirection().normalized();
 	hitrecord rec;
 	if (world.cluster->hit(r, 0.001f, 1000.0f, rec)) {
+
 		if (maxbounce > 0 && bounce_energy > 0.25f) {
 			ray scattered;
 			vec3 attenuation;
-			if (world.materials[rec.matId].scatter(r, rec, attenuation, scattered, l)) {
-				vec3 indirect = color(scattered, world, l, maxbounce - 1, world.materials[rec.matId].energyDraw() * bounce_energy);
+			if (world.materials[rec.matId]->scatter(r, rec, attenuation, scattered, l)) {
+				vec3 indirect = color(scattered, world, l, maxbounce - 1, world.materials[rec.matId]->energyDraw() * bounce_energy);
 				hitrecord temp;
-				//vec3 direct;
+				/*vec3 direct;
 				vec3 lightDirection = l->getDir(rec.p);
-				/*if (!world->hit(ray(rec.p, lightDirection), 0.001f, 1000.0f, temp)) {
-					direct = rec.mat->lighting(l, rec, r);
+				if (!world.cluster->hit(ray(rec.p, lightDirection), 0.001f, 1000.0f, temp)) {
+					direct = world.materials[rec.matId]->lighting(l, rec, r);
 				}
 				else {
 					direct = vec3(0, 0, 0);

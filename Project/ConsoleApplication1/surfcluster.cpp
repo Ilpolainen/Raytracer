@@ -6,31 +6,31 @@
 
 
 
-surfcluster::surfcluster(const surfcluster & other)
-{
-	std::cout << "Yo!";
-}
-
-surfcluster::surfcluster(surfcluster && other) noexcept :
-	subsurfs(std::move(other.subsurfs))
-{
-	std::cout << "\nSurfcluster move constructor called!\n";
-	n = subsurfs.size();
-}
-
-surfcluster & surfcluster::operator=(const surfcluster & other)
-{
-	std::cout << "Yey!";
-	return *this;
-}
-
-surfcluster & surfcluster::operator=(surfcluster && other) noexcept
-{
-	std::cout << "\nSurfcluster move assignment called!\n";
-	subsurfs = std::move(other.subsurfs);
-	n = subsurfs.size();
-	return *this;
-}
+//surfcluster::surfcluster(const surfcluster & other)
+//{
+//	std::cout << "\nSurfcluster MOVE constructor called!\n";
+//}
+//
+//surfcluster::surfcluster(surfcluster && other) noexcept :
+//	subsurfs(std::move(other.subsurfs))
+//{
+//	std::cout << "\nSurfcluster MOVE constructor called!\n";
+//	n = subsurfs.size();
+//}
+//
+//surfcluster & surfcluster::operator=(const surfcluster & other)
+//{
+//	std::cout << "\nSurfcluster COPY assignment called!\n";
+//	return *this;
+//}
+//
+//surfcluster & surfcluster::operator=(surfcluster && other) noexcept
+//{
+//	std::cout << "\nSurfcluster MOVE assignment called!\n";
+//	subsurfs = std::move(other.subsurfs);
+//	n = subsurfs.size();
+//	return *this;
+//}
 
 bool surfcluster::hit(const ray &r, float min, float max, hitrecord &data) const
 {
@@ -56,7 +56,6 @@ bool surfcluster::hit(const ray &r, float min, float max, hitrecord &data) const
 surfcluster::surfcluster(std::vector<std::unique_ptr<surf>> subsurfs) : subsurfs(std::move(subsurfs))
 {
 	n = this->subsurfs.size();
-	std::cout << "\nSurfcluster basic constructor called! -> subsurfs.size = " << n << ".\n";
 }
 
 int surfcluster::size() const
